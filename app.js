@@ -10,6 +10,7 @@ const passport = require('./config') // Import configured passport
 const session = require('express-session')
 const express = require('express')
 const socketio = require('socket.io')
+const MongoStore = require('connect-mongo');
 
 // Create an Express application
 const app = express()
@@ -55,7 +56,10 @@ app.use(session(
   { 
   secret: process.env.EXPRESS_SECRET || 'secret', 
   resave: false, 
-  saveUninitialized: false 
+  saveUninitialized: false,
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGODB_URI
+  }) 
 }
 ));
 
@@ -92,7 +96,8 @@ app.use((req, res) => {
 const PORT = process.env.PORT || 3000
 // Start the server and listen on the specified port
 server.listen(PORT, () => {
-  console.info(`Server started at http://localhost:${PORT}`)
-})
+  console.log(`Server started at http://localhost:${PORT}`);
+});
+
 
 
